@@ -1,3 +1,11 @@
+name: Build and push Docker image
+
+on:
+  push:
+    branches: [ main, first ]
+  pull_request:
+    branches: [ main, first ]
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
