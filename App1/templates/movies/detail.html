@@ -1,0 +1,54 @@
+﻿{% extends "base.html" %}
+{% block title %}{{ movie.title }}{% endblock %}
+{% block content %}
+<h2>{{ movie.title }} {% if movie.year %}<small class="text-muted">({{ movie.year }})</small>{% endif %}</h2>
+<p>
+    {% if movie.genre %}<span class="badge bg-info">{{ movie.genre }}</span>{% endif %}
+    {% if movie.watched_on %}<span class="badge bg-secondary">Watched: {{ movie.watched_on }}</span>{% endif %}
+    {% if movie.average_score() %}<span class="badge bg-warning text-dark">Avg Score: {{ movie.average_score() }} / 4</span>{% endif %}
+</p>
+
+<h4 class="mt-4">Scores</h4>
+{% if movie.ratings %}
+<table class="table table-sm" style="max-width: 400px;">
+    <thead><tr><th>Person</th><th>Score</th><th>Notes</th></tr></thead>
+    <tbody>
+        {% for rating in movie.ratings %}
+        <tr>
+            <td>{{ rating.person.name }}</td>
+            <td>{{ '⭐' * rating.score }} ({{ rating.score }})</td>
+            <td>{{ rating.notes or '' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">No scores yet.</p>
+{% endif %}
+
+<h5 class="mt-3">Add / Update a Score</h5>
+<form method="POST" action="{{ url_for('ratings.add_rating') }}" style="max-width: 400px;">
+    <input type="hidden" name="movie_id" value="{{ movie.id }}">
+    <div class="mb-2">
+        <select name="person_id" class="form-select" required>
+            <option value="">— Select person —</option>
+            {% for person in people %}
+            <option value="{{ person.id }}">{{ person.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-2">
+        <select name="score" class="form-select" required>
+            <option value="">— Score (1-4) —</option>
+            <option value="1">1 - Didn't like it</option>
+            <option value="2">2 - It was okay</option>
+            <option value="3">3 - Liked it</option>
+            <option value="4">4 - Loved it!</option>
+        </select>
+    </div>
+    <div class="mb-2">
+        <input type="text" name="notes" class="form-control" placeholder="Optional notes...">
+    </div>
+    <button type="submit" class="btn btn-success">Save Score</button>
+</form>
+{% endblock %}
