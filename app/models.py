@@ -14,15 +14,12 @@ class Person(db.Model):
 
 
 class Movie(db.Model):
-    __tablename__ = 'movies'
-
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
-    year = db.Column(db.Integer)
-    genre = db.Column(db.String(100))
-    watched_on = db.Column(db.Date)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    ratings = db.relationship('Rating', backref='movie', lazy=True, cascade='all, delete-orphan')
+    title = db.Column(db.String(255), nullable=False)
+    year = db.Column(db.String(10))
+    genre = db.Column(db.String(255))
+    imdb_link = db.Column(db.String(500))   # store full URL
+    imdb_id = db.Column(db.String(20))      # e.g. "tt0111161"
 
     def average_score(self):
         if not self.ratings:
