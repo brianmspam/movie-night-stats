@@ -44,6 +44,8 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix=
+            ghcr.io/${{ github.repository }}:fixed
+            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -53,8 +55,5 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
-<<<<<<< HEAD
           cache-to: type=gha,mode=max
-=======
           cache-to: type=gha,mode=max
->>>>>>> 6d933837d92ba68fa3cee8f3d2ca522aec7c11b2
