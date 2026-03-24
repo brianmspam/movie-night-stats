@@ -21,8 +21,8 @@ class Movie(db.Model):
     genre = db.Column(db.String(255))
     imdb_link = db.Column(db.String(500))
     imdb_id = db.Column(db.String(20))
-
     ratings = db.relationship('Rating', backref='movie', lazy=True, cascade='all, delete-orphan')
+    added = db.Column(db.datetime, default=getdate())
 
     def average_score(self):
         if not self.ratings:

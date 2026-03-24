@@ -9,12 +9,12 @@ movies_bp = Blueprint("movies", __name__)
 def list_movies():
     query = request.args.get('q', '')
     if query:
-        movies = Movie.query.filter(Movie.title.ilike(f'%{query}%')).order_by(Movie.watched_on.desc()).all()
+        movies = Movie.query.filter(Movie.title.ilike(f'%{query}%')).order_by(Movie.added.desc()).all()
     else:
-        movies = Movie.query.order_by(Movie.watched_on.desc()).all()
+        movies = Movie.query.order_by(Movie.added.desc()).all()
     return render_template('movies/list.html', movies=movies, query=query)
 
-@movies_bp.route("/movies/add", methods=["GET", "POST"])
+@movies_bp.route("/movies/add", methods=["GET", "POST"]) 
 def add_movie():
     form = MovieForm()
 
