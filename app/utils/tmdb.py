@@ -8,8 +8,11 @@ TMDB_API_KEY = os.environ.get("56f62ffdfb05bf4f97a3c1bfa25611a1")
 class TMDBError(Exception):
     pass
 
+class TMDBError(Exception):
+    pass
+
 def imdb_url_to_imdb_id(url: str) -> str | None:
-    path = urlparse(url).path  # "/title/tt0111161/"
+    path = urlparse(url).path  # e.g. "/title/tt0111161/"
     parts = [p for p in path.split("/") if p]
     return parts[1] if len(parts) >= 2 and parts[0] == "title" else None
 
@@ -18,7 +21,7 @@ def tmdb_find_by_imdb_id(imdb_id: str) -> dict:
         raise TMDBError("TMDB_API_KEY not configured")
 
     r = requests.get(
-        "https://api.themoviedb.org/3/find/" + imdb_id,
+        f"https://api.themoviedb.org/3/find/{imdb_id}",
         params={"api_key": TMDB_API_KEY, "language": "en-US", "external_source": "imdb_id"},
         timeout=10,
     )
@@ -26,4 +29,36 @@ def tmdb_find_by_imdb_id(imdb_id: str) -> dict:
     results = data.get("movie_results") or []
     if not results:
         raise TMDBError(f"No TMDb movie found for {imdb_id}")
-    return results[0]  # first match
+    return results[0]
+
+def tmdb_movie_details(tmdb_id: int) -> dict:
+    if not TMDB_API_KEY:
+        raise TMDBError("TMDB_API_KEY not configured")
+
+    r = requests.get(
+        f"https://api.themoviedb.org/3/movie/{tmdb_id}",
+        params={"api_key": TMDB_API_KEY, "language": "en-US"},
+        timeout=10,
+    )
+    data = r.json()
+    if r.status_code != 200 or "title" not in data:
+        raise TMDBError("Error fetching movie details")
+    return data
+
+def fetch_movie_from_imdb_url_tmdb(imdb_url: str) -> dict:
+    imdb_id = imdb_url_to_imdb_id(imdb_url)
+    if not imdb_id:
+        raise TMDBError("Not a valid IMDb title URL")
+
+    basic = tmdb_find_by_imdb_id(imdb_id)
+    tmdb_id = basic["id"]
+    details = tmdb_movie_details(tmdb_id)
+
+    return {
+        "imdb_id": imdb_id,
+        "imdb_link": imdb_url,
+        "tmdb_id": tmdb_id,
+        "title": details.get("title"),
+        "year": (details.get("release_date") or "")[:4],
+        "genre": ", ".join(g["name"] for g in details.get("genres", [])),
+    }
