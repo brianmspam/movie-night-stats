@@ -14,7 +14,7 @@ def list_movies():
         movies = Movie.query.order_by(Movie.watched_on.desc()).all()
     return render_template('movies/list.html', movies=movies, query=query)
 
-@bp.route("/movies/add", methods=["GET", "POST"])
+@movies_bp.route("/movies/add", methods=["GET", "POST"])
 def add_movie():
     form = MovieForm()
 
