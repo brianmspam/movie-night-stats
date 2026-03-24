@@ -53,4 +53,8 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
+<<<<<<< HEAD
           cache-to: type=gha,mode=max
+=======
+          cache-to: type=gha,mode=max
+>>>>>>> 6d933837d92ba68fa3cee8f3d2ca522aec7c11b2

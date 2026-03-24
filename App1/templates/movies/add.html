@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Add Movie{% endblock %}
+{% block content %}
+<h2>Add Movie</h2>
+<form method="POST" class="mt-3" style="max-width: 500px;">
+    <div class="mb-3">
+        <label class="form-label">Title *</label>
+        <input type="text" name="title" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Year</label>
+        <input type="number" name="year" class="form-control" min="1900" max="2099">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Genre</label>
+        <input type="text" name="genre" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Date Watched</label>
+        <input type="date" name="watched_on" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Add Movie</button>
+    <a href="{{ url_for('movies.list_movies') }}" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}
