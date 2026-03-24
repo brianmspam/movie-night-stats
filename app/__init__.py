@@ -1,9 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from app.routes.movies import movies_bp
-app.register_blueprint(movies_bp)
-
 import os
 
 db = SQLAlchemy()
@@ -15,13 +12,14 @@ def create_app():
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
         'DATABASE_URL',
-        'postgresql://movienight:movienight@db:5432/movienightdb'
+        'postgresql://movienight:movienight@movie_db:5432/movienightdb'
     )
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
     migrate.init_app(app, db)
 
+    # Import blueprints ONLY inside this function
     from app.routes.main import main_bp
     from app.routes.movies import movies_bp
     from app.routes.people import people_bp

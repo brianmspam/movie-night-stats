@@ -14,12 +14,15 @@ class Person(db.Model):
 
 
 class Movie(db.Model):
+    __tablename__ = 'movies'   # add this so FK matches
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     year = db.Column(db.String(10))
     genre = db.Column(db.String(255))
-    imdb_link = db.Column(db.String(500))   # store full URL
-    imdb_id = db.Column(db.String(20))      # e.g. "tt0111161"
+    imdb_link = db.Column(db.String(500))
+    imdb_id = db.Column(db.String(20))
+
+    ratings = db.relationship('Rating', backref='movie', lazy=True, cascade='all, delete-orphan')
 
     def average_score(self):
         if not self.ratings:
