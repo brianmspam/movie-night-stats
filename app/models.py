@@ -22,7 +22,7 @@ class Movie(db.Model):
     imdb_link = db.Column(db.String(500))
     imdb_id = db.Column(db.String(20))
     ratings = db.relationship('Rating', backref='movie', lazy=True, cascade='all, delete-orphan')
-    added = db.Column(db.DateTime, datetime.utcnow)
+    added = db.Column(db.DateTime, default=datetime.utcnow)
 
     def average_score(self):
         if not self.ratings:
