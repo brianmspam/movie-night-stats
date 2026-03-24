@@ -1,16 +1,13 @@
-version: '3.8'
-
 services:
   web:
     build: .
+    container_name: movieweb
     ports:
       - "5000:5000"
     environment:
       - DATABASE_URL=postgresql://movienight:movienight@db:5432/movienightdb
       - FLASK_ENV=development
-      - SECRET_KEY=dev-secret-key-change-me
-    volumes:
-      - .:/app
+      - SECRET_KEY=MicDaddy
     depends_on:
       db:
         condition: service_healthy
@@ -18,6 +15,7 @@ services:
 
   db:
     image: postgres:15
+    container_name: movie_db
     environment:
       - POSTGRES_USER=movienight
       - POSTGRES_PASSWORD=movienight
