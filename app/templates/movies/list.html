@@ -21,7 +21,7 @@
 			<td><a href="{{ url_for('movies.detail', movie_id=movie.id) }}">{{ movie.title }}</a></td>
 			<td>{{ movie.year or '—' }}</td>
 			<td>{{ movie.genre or '—' }}</td>
-			<td>{{ movie.watched_on or '—' }}</td>
+			<td>{{ movie.added or '—' }}</td>
 			<td>{{ movie.average_score() or '—' }}</td>
 		</tr>
 		{% endfor %}

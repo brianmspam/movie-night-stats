@@ -4,7 +4,7 @@
 <h2>{{ movie.title }} {% if movie.year %}<small class="text-muted">({{ movie.year }})</small>{% endif %}</h2>
 <p>
     {% if movie.genre %}<span class="badge bg-info">{{ movie.genre }}</span>{% endif %}
-    {% if movie.watched_on %}<span class="badge bg-secondary">Watched: {{ movie.watched_on }}</span>{% endif %}
+    {% if movie.added %}<span class="badge bg-secondary">Added: {{ movie.added }}</span>{% endif %}
     {% if movie.average_score() %}<span class="badge bg-warning text-dark">Avg Score: {{ movie.average_score() }} / 4</span>{% endif %}
 </p>
 
