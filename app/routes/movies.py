@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app import db
-from app.models import Movie
+from app.models import Movie, Rating, Person
 from app.utils.tmdb import fetch_movie_from_tmdb_url, tmdb_url_to_tmdb_id, TMDBError
 
 movies_bp = Blueprint("movies", __name__)
@@ -54,9 +54,8 @@ def add_movie():
 
     return render_template("movies/add.html")
 
-@movies_bp.route('/<int:movie_id>')
-def detail(movie_id):
+@movies_bp.route("/<int:movie_id>")
+def movie_detail(movie_id):
     movie = Movie.query.get_or_404(movie_id)
-    people = Person.query.all()
-    rated_ids = {r.person_id for r in movie.ratings}
-    return render_template('movies/detail.html', movie=movie, people=people, rated_ids=rated_ids)
+    people = Person.query.order_by(Person.name).all()
+    return render_template("movies/detail.html", movie=movie, people=people)
