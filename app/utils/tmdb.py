@@ -11,6 +11,21 @@ class TMDBError(Exception):
 class TMDBError(Exception):
     pass
 
+def tmdb_url_to_tmdb_id(url: str) -> int | None:
+    """Extract TMDb numeric id from a TMDb movie URL."""
+    parsed = urlparse(url)
+    if "themoviedb.org" not in parsed.netloc:
+        return None
+    # Example path: /movie/687163-project-hail-mary
+    parts = [p for p in parsed.path.split("/") if p]
+    if len(parts) >= 2 and parts[0] == "movie":
+        id_part = parts[1].split("-")[0]
+        try:
+            return int(id_part)
+        except ValueError:
+            return None
+    return None
+
 def tmdb_movie_details(tmdb_id: int) -> dict:
     if not TMDB_API_KEY:
         raise TMDBError("TMDB_API_KEY not configured")
