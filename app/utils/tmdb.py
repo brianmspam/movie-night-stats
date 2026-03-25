@@ -45,19 +45,16 @@ def tmdb_movie_details(tmdb_id: int) -> dict:
         raise TMDBError("Error fetching movie details")
     return data
 
-def fetch_movie_from_imdb_url_tmdb(imdb_url: str) -> dict:
-    imdb_id = imdb_url_to_imdb_id(imdb_url)
-    if not imdb_id:
-        raise TMDBError("Not a valid IMDb title URL")
+def fetch_movie_from_tmdb_url(tmdb_url: str) -> dict:
+    tmdb_id = tmdb_url_to_tmdb_id(tmdb_url)
+    if not tmdb_id:
+        raise TMDBError("Not a valid TMDb movie URL")
 
-    basic = tmdb_find_by_imdb_id(imdb_id)
-    tmdb_id = basic["id"]
     details = tmdb_movie_details(tmdb_id)
 
     return {
-        "imdb_id": imdb_id,
-        "imdb_link": imdb_url,
         "tmdb_id": tmdb_id,
+        "tmdb_link": tmdb_url,
         "title": details.get("title"),
         "year": (details.get("release_date") or "")[:4],
         "genre": ", ".join(g["name"] for g in details.get("genres", [])),

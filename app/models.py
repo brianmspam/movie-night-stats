@@ -19,8 +19,8 @@ class Movie(db.Model):
     title = db.Column(db.String(255), nullable=False)
     year = db.Column(db.String(10))
     genre = db.Column(db.String(255))
-    imdb_link = db.Column(db.String(500))
-    imdb_id = db.Column(db.String(20))
+    tmdb_link = db.Column(db.String(500))
+    tmdb_id = db.Column(db.String(20))
     ratings = db.relationship('Rating', backref='movie', lazy=True, cascade='all, delete-orphan')
     added = db.Column(db.DateTime, default=datetime.utcnow)
 

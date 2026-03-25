@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app import db
 from app.models import Movie
-from app.utils.tmdb import fetch_movie_from_imdb_url_tmdb, imdb_url_to_imdb_id, TMDBError
+from app.utils.tmdb import fetch_movie_from_tmdb_url_tmdb, imdb_url_to_imdb_id, TMDBError
 
 movies_bp = Blueprint("movies", __name__)
 
@@ -16,27 +16,36 @@ def list_movies():
 
 @movies_bp.route("/add", methods=["GET", "POST"])
 def add_movie():
-    if request.method == "POST" and "fetch_imdb" in request.form and request.form.get("imdb_url"):
+    if request.method == "POST" and "fetch_tmdb" in request.form and request.form.get("tmdb_url"):
+        url = request.form["tmdb_url"]
         try:
-            data = fetch_movie_from_imdb_url_tmdb(request.form["imdb_url"])
+            data = fetch_movie_from_tmdb_url(url)
             return render_template(
                 "movies/add.html",
-                imdb_url=request.form["imdb_url"],
+                tmdb_url=url,
                 title=data["title"],
                 year=data["year"],
                 genre=data["genre"],
             )
         except TMDBError as e:
             flash(f"Could not load from TMDb: {e}", "danger")
-            return render_template("movies/add.html", imdb_url=request.form.get("imdb_url"))
+            return render_template("movies/add.html", tmdb_url=url)
 
     if request.method == "POST" and "save" in request.form:
+        tmdb_url = request.form.get("tmdb_url") or None
+        data = {}
+        if tmdb_url:
+            try:
+                data = fetch_movie_from_tmdb_url(tmdb_url)
+            except TMDBError:
+                data = {}
+
         movie = Movie(
-            title=request.form.get("title"),
-            year=request.form.get("year"),
-            genre=request.form.get("genre"),
-            imdb_link=request.form.get("imdb_url") or None,
-            imdb_id=imdb_url_to_imdb_id(request.form.get("imdb_url")) if request.form.get("imdb_url") else None,
+            title=request.form.get("title") or data.get("title"),
+            year=request.form.get("year") or data.get("year"),
+            genre=request.form.get("genre") or data.get("genre"),
+            tmdb_id=data.get("tmdb_id"),
+            tmdb_link=tmdb_url,
         )
         db.session.add(movie)
         db.session.commit()
@@ -44,7 +53,6 @@ def add_movie():
         return redirect(url_for("main.index"))
 
     return render_template("movies/add.html")
-
 @movies_bp.route('/<int:movie_id>')
 def detail(movie_id):
     movie = Movie.query.get_or_404(movie_id)

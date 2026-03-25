@@ -4,8 +4,8 @@
 <h2>Add Movie</h2>
 <form method="post">
     <label>IMDb URL</label>
-    <input type="text" name="imdb_url" value="{{ imdb_url or '' }}">
-    <button type="submit" name="fetch_imdb" value="1">Fetch from IMDb (TMDb)</button>
+    <input type="text" name="tmdb_url" value="{{ imdb_url or '' }}">
+    <button type="submit" name="fetch_imdb" value="1">Fetch from TMDb</button>
 
     <label>Title</label>
     <input type="text" name="title" value="{{ title or '' }}">
