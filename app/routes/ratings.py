@@ -7,28 +7,48 @@ ratings_bp = Blueprint('ratings', __name__)
 @ratings_bp.route('/add', methods=['POST'])
 def add_rating():
     movie_id = request.form.get('movie_id')
-    person_id = request.form.get('person_id')
-    score = request.form.get('score')
-    notes = request.form.get('notes', '').strip() or None
 
-    if not all([movie_id, person_id, score]):
-        flash('Movie, person, and score are all required.', 'error')
+    if not movie_id:
+        flash('Movie is required.', 'error')
         return redirect(url_for('movies.list_movies'))
 
-    score = int(score)
-    if score < 1 or score > 4:
-        flash('Score must be between 1 and 4.', 'error')
-        return redirect(url_for('movies.movie_detail', movie_id=movie_id))
+    movie = Movie.query.get_or_404(movie_id)
+    people = Person.query.order_by(Person.name).all()
 
-    existing = Rating.query.filter_by(person_id=person_id, movie_id=movie_id).first()
-    if existing:
-        existing.score = score
-        existing.notes = notes
-        flash('Rating updated!', 'success')
-    else:
-        rating = Rating(score=score, notes=notes, person_id=person_id, movie_id=movie_id)
+    any_updated = False
+
+    for person in people:
+        score_key = f'score_{person.id}'
+        notes_key = f'notes_{person.id}'
+
+        score_val = request.form.get(score_key)
+        notes_val = (request.form.get(notes_key) or '').strip() or None
+
+        # Nothing submitted for this person, skip
+        if not score_val:
+            continue
+
+        try:
+            score = int(score_val)
+        except ValueError:
+            continue
+
+        if score < 1 or score > 4:
+            continue  # ignore invalid scores silently; or flash if you prefer
+
+        rating = Rating.query.filter_by(person_id=person.id, movie_id=movie.id).first()
+        if rating is None:
+            rating = Rating(person_id=person.id, movie_id=movie.id)
+
+        rating.score = score
+        rating.notes = notes_val
         db.session.add(rating)
-        flash('Rating saved!', 'success')
+        any_updated = True
 
-    db.session.commit()
+    if any_updated:
+        db.session.commit()
+        flash('Scores updated.', 'success')
+    else:
+        flash('No scores to update.', 'info')
+
     return redirect(url_for('movies.movie_detail', movie_id=movie_id))
