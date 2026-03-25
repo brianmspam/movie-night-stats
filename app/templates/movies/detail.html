@@ -35,7 +35,7 @@
                         <option value="">—</option>
                         {% for s in [1, 2, 3, 4] %}
                         <option value="{{ s }}"
-                                {% if rating and rating.score= =s %}selected{% endif %}>
+                                {% if rating and rating.score == s %}selected{% endif %}>
                             {{ s }}
                         </option>
                         {% endfor %}
