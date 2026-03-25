@@ -14,36 +14,36 @@ def list_movies():
         movies = Movie.query.order_by(Movie.added.desc()).all()
     return render_template('movies/list.html', movies=movies, query=query)
 
-@movies_bp.route("/movies/add", methods=["GET", "POST"]) 
+@movies_bp.route("/add", methods=["GET", "POST"])
 def add_movie():
-    form = MovieForm()
-
-    if "fetch_imdb" in request.form and form.imdb_url.data:
+    if request.method == "POST" and "fetch_imdb" in request.form and request.form.get("imdb_url"):
         try:
-            data = fetch_movie_from_imdb_url_tmdb(form.imdb_url.data)
-            form.title.data = data["title"]
-            form.year.data = data["year"]
-            form.genre.data = data["genre"]
-            flash("Movie details loaded from TMDb.", "success")
+            data = fetch_movie_from_imdb_url_tmdb(request.form["imdb_url"])
+            return render_template(
+                "movies/add.html",
+                imdb_url=request.form["imdb_url"],
+                title=data["title"],
+                year=data["year"],
+                genre=data["genre"],
+            )
         except TMDBError as e:
             flash(f"Could not load from TMDb: {e}", "danger")
-        return render_template("movies/add.html", form=form)
+            return render_template("movies/add.html", imdb_url=request.form.get("imdb_url"))
 
-    if form.validate_on_submit():
+    if request.method == "POST" and "save" in request.form:
         movie = Movie(
-            title=form.title.data,
-            year=form.year.data,
-            genre=form.genre.data,
-            imdb_link=form.imdb_url.data or None,
-            imdb_id=imdb_url_to_imdb_id(form.imdb_url.data) if form.imdb_url.data else None,
-            tmdb_id=request.form.get("tmdb_id"),  # or add hidden field if you want
+            title=request.form.get("title"),
+            year=request.form.get("year"),
+            genre=request.form.get("genre"),
+            imdb_link=request.form.get("imdb_url") or None,
+            imdb_id=imdb_url_to_imdb_id(request.form.get("imdb_url")) if request.form.get("imdb_url") else None,
         )
         db.session.add(movie)
         db.session.commit()
         flash("Movie added.", "success")
         return redirect(url_for("main.index"))
 
-    return render_template("movies/add.html", form=form)
+    return render_template("movies/add.html")
 
 @movies_bp.route('/<int:movie_id>')
 def detail(movie_id):
