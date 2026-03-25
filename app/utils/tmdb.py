@@ -3,7 +3,7 @@ import os
 import requests
 from urllib.parse import urlparse
 
-TMDB_API_KEY = os.environ.get("56f62ffdfb05bf4f97a3c1bfa25611a1")
+TMDB_API_KEY = os.environ.get("TMDB_API_KEY")
 
 class TMDBError(Exception):
     pass
