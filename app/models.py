@@ -25,9 +25,10 @@ class Movie(db.Model):
     added = db.Column(db.DateTime, default=datetime.utcnow)
 
     def average_score(self):
-        if not self.ratings:
+        scores = [r.score for r in self.ratings if r.score is not None]
+        if not scores:
             return None
-        return round(sum(r.score for r in self.ratings) / len(self.ratings), 2)
+        return round(sum(scores) / len(scores), 2)
 
     def __repr__(self):
         return f'<Movie {self.title} ({self.year})>'

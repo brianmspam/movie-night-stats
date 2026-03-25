@@ -24,19 +24,21 @@ def add_rating():
         score_val = request.form.get(score_key)
         notes_val = (request.form.get(notes_key) or '').strip() or None
 
-        # Nothing submitted for this person, skip
+        # Did not watch: empty => exclude from ratings
         if not score_val:
             continue
 
         try:
-            score = int(score_val)
+            score = float(score_val)
         except ValueError:
             continue
 
-        if score < 1 or score > 4:
-            continue  # ignore invalid scores silently; or flash if you prefer
+        if score < 1.0 or score > 4.0:
+            continue
 
-        rating = Rating.query.filter_by(person_id=person.id, movie_id=movie.id).first()
+        rating = Rating.query.filter_by(
+            person_id=person.id, movie_id=movie.id
+        ).first()
         if rating is None:
             rating = Rating(person_id=person.id, movie_id=movie.id)
 
