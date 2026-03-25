@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from app import db
 from app.models import Movie
-from app.utils.tmdb import fetch_movie_from_tmdb_url_tmdb, imdb_url_to_imdb_id, TMDBError
+from app.utils.tmdb import fetch_movie_from_tmdb_url, TMDBError
 
 movies_bp = Blueprint("movies", __name__)
 
@@ -51,6 +51,8 @@ def add_movie():
         db.session.commit()
         flash("Movie added.", "success")
         return redirect(url_for("main.index"))
+
+    return render_template("movies/add.html")
 
     return render_template("movies/add.html")
 @movies_bp.route('/<int:movie_id>')
