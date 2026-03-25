@@ -18,7 +18,7 @@ def add_rating():
     score = int(score)
     if score < 1 or score > 4:
         flash('Score must be between 1 and 4.', 'error')
-        return redirect(url_for('movies.detail', movie_id=movie_id))
+        return redirect(url_for('movies.movie_detail', movie_id=movie_id))
 
     existing = Rating.query.filter_by(person_id=person_id, movie_id=movie_id).first()
     if existing:
@@ -31,4 +31,4 @@ def add_rating():
         flash('Rating saved!', 'success')
 
     db.session.commit()
-    return redirect(url_for('movies.detail', movie_id=movie_id))
+    return redirect(url_for('movies.movie_detail', movie_id=movie_id))
