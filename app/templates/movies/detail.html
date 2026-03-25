@@ -36,7 +36,7 @@
                         {% for s in range(100, 401, 25) %}
                         {% set val = s / 100 %}
                         <option value="{{ val }}"
-                                {% if rating and rating.score= =val %}selected{% endif %}>
+                                {% if rating and rating.score == val %}selected{% endif %}
                             {{ "%.2f"|format(val) }}
                         </option>
                         {% endfor %}
