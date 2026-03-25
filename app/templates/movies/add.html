@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block title %}Add Movie{% endblock %}
+
 {% block content %}
 <h2>Add Movie</h2>
+
 <form method="post">
-    <label>IMDb URL</label>
-    <input type="text" name="tmdb_url" value="{{ imdb_url or '' }}">
-    <button type="submit" name="fetch_imdb" value="1">Fetch from TMDb</button>
+    <label>TMDb URL</label>
+    <input type="text" name="tmdb_url" value="{{ tmdb_url or '' }}">
+    <button type="submit" name="fetch_tmdb" value="1">Fetch from TMDb</button>
 
     <label>Title</label>
     <input type="text" name="title" value="{{ title or '' }}">
