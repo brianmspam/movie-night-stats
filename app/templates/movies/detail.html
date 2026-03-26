@@ -32,11 +32,11 @@
                 <td>{{ person.name }}</td>
                 <td>
                     <select name="score_{{ person.id }}" class="rating-select" style="color: #212529; background-color: #ffffff;">
-                        <option value="">Did not watch</option>
+                        <option value="" style="color: #212529; background-color: #ffffff;">Did not watch</option>
                         {% for s in range(100, 401, 25) %}
                         {% set val = s / 100 %}
-                        <option value="{{ val }}" 
-                                {% if rating and rating.score == val %}selected{% endif %}
+                        <option value="{{ val }}"
+                                {% if rating and rating.score= =val %}selected{% endif %}
                                 {{ "%.2f"|format(val) }}
                         </option>
                         {% endfor %}
