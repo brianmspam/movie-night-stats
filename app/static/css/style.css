@@ -1,5 +1,6 @@
 body {
-    background-color: #f8f9fa;
+    background-color: #f8f9fa; /* light gray */
+    color: #212529; /* dark text */
 }
 
 .navbar-brand {
