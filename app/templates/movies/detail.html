@@ -31,11 +31,11 @@
             <tr>
                 <td>{{ person.name }}</td>
                 <td>
-                    <select name="score_{{ person.id }}" class="form-select form-select-sm rating-select">
+                    <select name="score_{{ person.id }}" class="rating-select">
                         <option value="">Did not watch</option>
                         {% for s in range(100, 401, 25) %}
                         {% set val = s / 100 %}
-                        <option value="{{ val }}"
+                        <option value="{{ val }}" 
                                 {% if rating and rating.score == val %}selected{% endif %}
                                 {{ "%.2f"|format(val) }}
                         </option>
