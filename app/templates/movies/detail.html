@@ -31,7 +31,7 @@
             <tr>
                 <td>{{ person.name }}</td>
                 <td>
-                    <select name="score_{{ person.id }}" class="rating-select" style="color: #212529; background-color: #ffffff;"
+                    <select name="score_{{ person.id }}" class="rating-select" style="color: #212529; background-color: #ffffff;">
                         <option value="">Did not watch</option>
                         {% for s in range(100, 401, 25) %}
                         {% set val = s / 100 %}
