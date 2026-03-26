@@ -35,7 +35,7 @@
                         <option value="" style="color: #212529; background-color: #ffffff;">Did not watch</option>
                         {% for s in range(100, 401, 25) %}
                         {% set val = s / 100 %}
-                        <option value="{{ val }}" style="color: #212529; background-color: #ffffff;"
+                        <option value="{{ val }}" class="rating-select" style="color: #212529; background-color: #ffffff;"
                                 {% if rating and rating.score == val %}selected{% endif %}
                                 {{ "%.2f"|format(val) }}
                         </option>
