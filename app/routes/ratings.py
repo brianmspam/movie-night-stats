@@ -17,41 +17,41 @@ def add_rating():
 
     any_updated = False
 
-        for person in people:
-            score_key = f'score_{person.id}'
-            notes_key = f'notes_{person.id}'
+    for person in people:
+        score_key = f'score_{person.id}'
+        notes_key = f'notes_{person.id}'
 
-            score_val = request.form.get(score_key)
-            notes_val = (request.form.get(notes_key) or '').strip() or None
+        score_val = request.form.get(score_key)
+        notes_val = (request.form.get(notes_key) or '').strip() or None
 
-            rating = Rating.query.filter_by(
-                person_id=person.id, movie_id=movie.id
-            ).first()
+        rating = Rating.query.filter_by(
+            person_id=person.id, movie_id=movie.id
+        ).first()
 
-            # Did not watch: make score NULL and clear notes
-            if not score_val:
-                if rating:
-                    rating.score = None
-                    rating.notes = None
-                    db.session.add(rating)
-                    any_updated = True
-                continue
+        # Did not watch: make score NULL and clear notes
+        if not score_val:
+            if rating:
+                rating.score = None
+                rating.notes = None
+                db.session.add(rating)
+                any_updated = True
+            continue
 
-            try:
-                score = float(score_val)
-            except ValueError:
-                continue
+        try:
+            score = float(score_val)
+        except ValueError:
+            continue
 
-            if score < 1.0 or score > 4.0:
-                continue
+        if score < 1.0 or score > 4.0:
+            continue
 
-            if rating is None:
-                rating = Rating(person_id=person.id, movie_id=movie.id)
+        if rating is None:
+            rating = Rating(person_id=person.id, movie_id=movie.id)
 
-            rating.score = score
-            rating.notes = notes_val
-            db.session.add(rating)
-            any_updated = True
+        rating.score = score
+        rating.notes = notes_val
+        db.session.add(rating)
+        any_updated = True
 
     if any_updated:
         db.session.commit()
