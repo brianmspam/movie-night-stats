@@ -28,12 +28,10 @@ def add_rating():
             person_id=person.id, movie_id=movie.id
         ).first()
 
-        # Did not watch: make score NULL and clear notes
+        # Did not watch: remove rating entirely
         if not score_val:
             if rating:
-                rating.score = None
-                rating.notes = None
-                db.session.add(rating)
+                db.session.delete(rating)
                 any_updated = True
             continue
 
