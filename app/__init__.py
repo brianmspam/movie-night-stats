@@ -24,10 +24,12 @@ def create_app():
     from app.routes.movies import movies_bp
     from app.routes.people import people_bp
     from app.routes.ratings import ratings_bp
+    from app.routes.tmdb import tmdb_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(movies_bp, url_prefix='/movies')
     app.register_blueprint(people_bp, url_prefix='/people')
     app.register_blueprint(ratings_bp, url_prefix='/ratings')
+    app.register_blueprint(tmdb_bp) 
 
     return app

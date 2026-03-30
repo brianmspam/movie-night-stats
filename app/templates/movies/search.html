@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}TMDb Search{% endblock %}
+{% block content %}
+<h2>Search TMDb</h2>
+
+<form method="get" class="mb-3" action="{{ url_for('tmdb.search') }}">
+    <div class="input-group" style="max-width: 500px;">
+        <input type="text" name="q" class="form-control"
+               placeholder="Movie title..." value="{{ query or '' }}">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+</form>
+
+{% if query %}
+  {% if results %}
+<table class="table table-sm">
+    <thead>
+        <tr><th>Title</th><th>Year</th><th></th></tr>
+    </thead>
+    <tbody>
+        {% for m in results %}
+        <tr>
+            <td>{{ m.title }}</td>
+            <td>{{ (m.release_date or '')[:4] }}</td>
+            <td>
+                <a class="btn btn-success btn-sm"
+                   href="{{ url_for('movies.add_movie',
+                                  title=m.title,
+                                  year=(m.release_date or '')[:4],
+                                  tmdb_id=m.id) }}">
+                    Use this
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+  {% else %}
+<p class="text-muted">No results.</p>
+  {% endif %}
+{% endif %}
+{% endblock %}
