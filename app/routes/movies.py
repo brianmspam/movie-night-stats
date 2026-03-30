@@ -67,21 +67,3 @@ def movie_detail(movie_id):
     movie = Movie.query.get_or_404(movie_id)
     people = Person.query.order_by(Person.name).all()
     return render_template("movies/detail.html", movie=movie, people=people)
-
-@tmdb_bp.route("/search")
-def search():
-    query = request.args.get("q", "").strip()
-    results = []
-
-    if query:
-        api_key = current_app.config.get("TMDB_API_KEY") or os.getenv("TMDB_API_KEY")
-        if api_key:
-            r = requests.get(
-                "https://api.themoviedb.org/3/search/movie",
-                params={"api_key": api_key, "query": query},
-                timeout=5,
-            )
-            data = r.json()
-            results = data.get("results", [])  # title, release_date, id, etc.[web:468][web:469]
-
-    return render_template("tmdb/search.html", query=query, results=results)
